@@ -88,7 +88,11 @@
   .fld input,.fld textarea{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:6px 8px;width:100%;color:inherit;font:inherit}
   .fld textarea{min-height:50px;resize:vertical}
   .drow-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .muted{color:var(--muted)} .foot{margin-top:10px;font-size:12px;color:var(--muted)}
+  .muted{color:var(--muted)}
+  .brand{display:flex;align-items:center;justify-content:center;gap:9px;margin:34px 0 22px;
+    color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+  .brand svg{width:22px;height:22px;opacity:.85}
+  .brand b{font-weight:600;letter-spacing:.16em;color:var(--text)}
   code{background:var(--panel-2);padding:1px 4px;border-radius:4px}
   dialog{border:1px solid var(--border);border-radius:12px;background:var(--panel);color:var(--text);max-width:680px;width:92vw;padding:0}
   dialog::backdrop{background:rgba(0,0,0,.45)}
@@ -136,13 +140,15 @@
   </table>
   </div>
 
-  <p class="foot">
-    Wie in Google Sheets: direkt in die Zelle klicken und tippen bzw. auswählen — Name, Status, Website, E-Mail, Datum, alles inline.
-    Der Status färbt die ganze Zeile. <b>+ Prospect hinzufügen</b> legt eine neue Zeile an.
-    Das ▸ links klappt Zusatzfelder auf (Stadt, Score, YouTube, Instagram, Notizen …). Follow-up-Kästchen setzen automatisch das heutige Datum.
-    <br>Änderungen leben zunächst nur im Browser. Dauerhaft speichern: <b>Exportieren → data.json herunterladen</b>,
-    Datei im Repo ersetzen, committen, pushen. Oder <code>data.json</code> von Hand editieren.
-  </p>
+  <footer class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3.5c-1.7 2.1-1.7 5.3 0 7.4 1.7-2.1 1.7-5.3 0-7.4Z"/>
+      <path d="M6.2 8c-.7 2.6.8 5.4 3.8 6.4-.2-2.8-1.7-5.4-3.8-6.4Z"/>
+      <path d="M17.8 8c.7 2.6-.8 5.4-3.8 6.4.2-2.8 1.7-5.4 3.8-6.4Z"/>
+      <path d="M3.5 13.6c2.2 2.7 5.3 3.9 8.5 3.9s6.3-1.2 8.5-3.9"/>
+    </svg>
+    <span>Made by <b>Business&nbsp;Buddha</b></span>
+  </footer>
 </div>
 
 <dialog id="exportDlg">
@@ -221,7 +227,7 @@ function setNotice(msg, kind){
 }
 function markDirty(){
   dirty = true;
-  localStorage.setItem(LS_KEY, JSON.stringify(model));
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(model)); }catch(e){}
   setNotice('Ungespeicherte Änderungen (nur in diesem Browser). Zum Sichern: <b>Exportieren</b> → data.json ersetzen &amp; committen.', "dirty");
   renderStats();
 }
@@ -406,16 +412,24 @@ function detailRow(p){
 function addProspect(){
   const id = "neu-"+Date.now().toString(36);
   model.prospects.unshift({
-    id, name:"", city:"", owner:"", status:"Neu", score:"", email:"", website:"", youtube:"", instagram:"",
+    id, name:"Neuer Prospect", city:"", owner:"", status:"Neu", score:"", email:"", website:"", youtube:"", instagram:"",
     hookVideoTitle:"", subs:"", lastUpload:"", bestVideoViews:"", moneySignal:"", notes:"",
     contactedDate:"", followUp1:false, followUp1Date:"", followUp2:false, followUp2Date:"",
     source:"manuell "+todayStr
   });
   expanded.add(id);
-  document.getElementById("q").value=""; document.getElementById("fOwner").value="";
-  document.getElementById("fStatus").value=""; document.getElementById("fScore").value="";
-  markDirty(); renderTable();
-  const first = document.querySelector("#tbody .prow .c-name .cin"); if(first) first.focus();
+  ["q","fOwner","fStatus"].forEach(fid=>{ const el=document.getElementById(fid); if(el) el.value=""; });
+  sortK = "name"; sortDir = 1; updateArrows();
+  renderTable();
+  markDirty();
+  window.scrollTo({top:0,behavior:"smooth"});
+  const firstRow = document.querySelector("#tbody tr.prow");
+  if(firstRow){
+    firstRow.style.transition = "background .15s"; firstRow.style.background = "var(--accent-weak)";
+    setTimeout(()=>{ firstRow.style.background = ""; }, 900);
+    const nameInp = firstRow.querySelector(".c-name .cin");
+    if(nameInp){ nameInp.focus(); nameInp.select(); }
+  }
 }
 
 /* export */
