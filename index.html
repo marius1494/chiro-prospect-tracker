@@ -122,9 +122,6 @@
     <select id="fOwner"><option value="">Alle Bearbeiter</option></select>
     <select id="fStatus"><option value="">Alle Status</option></select>
     <button id="addBtn" class="primary">+ Prospect hinzufügen</button>
-    <div class="spacer"></div>
-    <button id="exportBtn">Exportieren</button>
-    <button id="resetBtn" title="Nicht gespeicherte Änderungen verwerfen">Zurücksetzen</button>
   </div>
 
   <div id="dirtyNotice"></div>
@@ -156,20 +153,6 @@
     <span>Made by <b>Business&nbsp;Buddha</b></span>
   </footer>
 </div>
-
-<dialog id="exportDlg">
-  <div class="dlg">
-    <h3 style="margin:0 0 8px">Exportieren</h3>
-    <p class="muted" style="margin:0 0 8px">Ersetze <code>data.json</code> im Repo mit diesem Inhalt und committe.</p>
-    <div class="drow-actions" style="margin-top:0">
-      <button id="dlJson" class="primary">data.json herunterladen</button>
-      <button id="cpJson">JSON kopieren</button>
-      <button id="cpCsv">CSV kopieren</button>
-      <button id="closeDlg">Schließen</button>
-    </div>
-    <textarea id="exportText" readonly spellcheck="false"></textarea>
-  </div>
-</dialog>
 
 <dialog id="ghDlg">
   <div class="dlg">
@@ -391,11 +374,6 @@ function init(){
     updateArrows(); renderTable();
   });
   document.getElementById("addBtn").onclick = addProspect;
-  document.getElementById("resetBtn").onclick = ()=>{
-    if(!confirm("Nicht gespeicherte Änderungen verwerfen und data.json neu laden?")) return;
-    localStorage.removeItem(LS_KEY); location.reload();
-  };
-  document.getElementById("exportBtn").onclick = openExport;
   const ghDlg = document.getElementById("ghDlg");
   document.getElementById("ghBtn").onclick = ()=>{ document.getElementById("ghTok").value = ghToken; if(ghDlg.showModal) ghDlg.showModal(); };
   document.getElementById("ghClose").onclick = ()=> ghDlg.close();
@@ -589,30 +567,10 @@ function addProspect(){
   }
 }
 
-/* export */
+/* JSON-Serialisierung fuer den GitHub-Sync */
 function currentJson(){
   return JSON.stringify({updated: todayStr, note: model.note, prospects: model.prospects.map(p=>({...p}))}, null, 2)+"\n";
 }
-function currentCsv(){
-  const cols = ["name","city","owner","status","score","website","email","youtube","instagram","hookVideoTitle",
-    "subs","lastUpload","bestVideoViews","contactedDate","followUp1","followUp1Date","followUp2","followUp2Date","moneySignal","notes","source"];
-  const q = v => '"'+(v==null?"":v).toString().replace(/"/g,'""')+'"';
-  return cols.join(",")+"\n"+model.prospects.map(p=>cols.map(c=>q(p[c])).join(",")).join("\n")+"\n";
-}
-const exportDlg = document.getElementById("exportDlg");
-function openExport(){
-  document.getElementById("exportText").value = currentJson();
-  if(exportDlg.showModal) exportDlg.showModal(); else alert(currentJson());
-}
-document.getElementById("closeDlg").onclick = ()=>exportDlg.close();
-document.getElementById("dlJson").onclick = ()=>{
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([currentJson()],{type:"application/json"}));
-  a.download = "data.json"; a.click(); URL.revokeObjectURL(a.href);
-};
-document.getElementById("cpJson").onclick = ()=>{ navigator.clipboard.writeText(currentJson()); flash("cpJson"); };
-document.getElementById("cpCsv").onclick = ()=>{ const c=currentCsv(); document.getElementById("exportText").value=c; navigator.clipboard.writeText(c); flash("cpCsv"); };
-function flash(id){ const b=document.getElementById(id), t=b.textContent; b.textContent="kopiert ✓"; setTimeout(()=>b.textContent=t,1200); }
 
 load();
 </script>
