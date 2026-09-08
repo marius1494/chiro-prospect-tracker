@@ -285,9 +285,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "E-Mail suchen; prueft ob Kanal schon ausgelagert ist",
+      "nextAction": "E-Mail suchen; pruefen ob Kanal bereits betreut wird",
       "nextActionDate": "",
-      "notes": "Postet relativ regelmaessig - evtl. schon jemand dran.",
+      "notes": "Postet relativ regelmaessig - ggf. bereits betreut.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -383,7 +383,7 @@
       "followUp2Date": "",
       "nextAction": "E-Mail suchen, Kanal-Stats verifizieren",
       "nextActionDate": "",
-      "notes": "Einzelstandort - kleineres Budget moeglich.",
+      "notes": "Einzelstandort - Budget im Call klaeren.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -424,14 +424,14 @@
       "subs": "verify",
       "lastUpload": "verify",
       "bestVideoViews": "verify",
-      "moneySignal": "2 Aerztinnen, Shockwave + Dry Needling + Cupping + Akupunktur, wohlhabender Vorort; Praxis wirkt eher jung/kleiner",
+      "moneySignal": "2 Aerztinnen, Shockwave + Dry Needling + Cupping + Akupunktur, wohlhabender Vorort",
       "hookVideoTitle": "",
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
       "nextAction": "E-Mail suchen, Kanal-Stats verifizieren",
       "nextActionDate": "",
-      "notes": "Eher kleinere/juengere Praxis - Budget pruefen.",
+      "notes": "Budget im Call klaeren.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -453,9 +453,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "Vorsicht: Inhaber betreibt selbst Chiro-Marketing-Podcast - evtl. wenig empfaenglich",
+      "nextAction": "Inhaber kennt Marketing bereits gut (eigener Podcast) - Angebot entsprechend zuspitzen",
       "nextActionDate": "",
-      "notes": "Inhaber ist Marketing-affin / betreibt Podcast fuer Chiro-Praxen.",
+      "notes": "Inhaber betreibt einen Marketing-Podcast fuer Chiro-Praxen.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -477,9 +477,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "E-Mail / Marketing-Kontakt der Kette suchen - Aufhaenger: 'ihr habt bewiesen dass ihrs koennt'",
+      "nextAction": "E-Mail / Marketing-Kontakt der Kette suchen - Aufhaenger: Kanal 2023 gut gestartet, dann pausiert",
       "nextActionDate": "",
-      "notes": "23 Standorte = Budget. Kanal 2023 fallengelassen.",
+      "notes": "23 Standorte. Kanal 2023 pausiert.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -501,9 +501,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "Niedrige Prioritaet - Kanal sehr kalt",
+      "nextAction": "Niedrige Prioritaet - Kanal seit ~3 Jahren inaktiv",
       "nextActionDate": "",
-      "notes": "Sehr kalter Kanal.",
+      "notes": "Kanal seit ~3 Jahren inaktiv.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -525,9 +525,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "Niedrige Prioritaet - Kanal existiert kaum",
+      "nextAction": "Niedrige Prioritaet - nur ~4 Videos auf dem Kanal",
       "nextActionDate": "",
-      "notes": "Grenzfall: Kanal existiert kaum.",
+      "notes": "Nur ~4 Videos auf dem Kanal.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -549,9 +549,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "Ueberspringen - Kanal wird bereits professionell bespielt",
+      "nextAction": "Niedrige Prioritaet - Kanal wird bereits regelmaessig bespielt",
       "nextActionDate": "",
-      "notes": "Grosses Money-Signal, aber Kanal laeuft schon - wohl ausgelagert.",
+      "notes": "Grosses Money-Signal, aber Kanal wird bereits regelmaessig bespielt.",
       "source": "Deep-Research 2026-09-08"
     },
     {
@@ -573,9 +573,9 @@
       "contactedDate": "",
       "followUp1Date": "",
       "followUp2Date": "",
-      "nextAction": "Ueberspringen - produziert bereits taeglich Shorts",
+      "nextAction": "Niedrige Prioritaet - bereits sehr aktiver Kanal",
       "nextActionDate": "",
-      "notes": "Kanal produziert taeglich - wohl schon ausgelagert.",
+      "notes": "Kanal bereits sehr aktiv.",
       "source": "Deep-Research 2026-09-08"
     }
   ]
