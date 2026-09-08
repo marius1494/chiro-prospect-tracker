@@ -93,6 +93,10 @@
     color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
   .brand svg{width:22px;height:22px;opacity:.85}
   .brand b{font-weight:600;letter-spacing:.16em;color:var(--text)}
+  .sync{font-size:12px;color:var(--muted);white-space:nowrap}
+  .sync.ok{color:var(--good)} .sync.pending{color:var(--warn)} .sync.err{color:var(--bad)}
+  #ghBtn{white-space:nowrap}
+  .dlg p code{background:var(--panel-2);padding:1px 4px;border-radius:4px}
   code{background:var(--panel-2);padding:1px 4px;border-radius:4px}
   dialog{border:1px solid var(--border);border-radius:12px;background:var(--panel);color:var(--text);max-width:680px;width:92vw;padding:0}
   dialog::backdrop{background:rgba(0,0,0,.45)}
@@ -105,6 +109,8 @@
   <h1>Chiro Prospect Tracker</h1>
   <div class="stats" id="stats"></div>
   <div class="spacer"></div>
+  <span id="sync" class="sync"></span>
+  <button id="ghBtn" title="GitHub-Sync einrichten">⇅ Sync</button>
   <button id="themeBtn" title="Hell / Dunkel">◐</button>
 </header>
 
@@ -165,6 +171,30 @@
   </div>
 </dialog>
 
+<dialog id="ghDlg">
+  <div class="dlg">
+    <h3 style="margin:0 0 8px">GitHub-Sync</h3>
+    <p class="muted" style="margin:0 0 10px">
+      Mit einem persönlichen Zugriffs-Token wird jede Änderung automatisch nach GitHub gespeichert —
+      dein Kollege sieht sie nach spätestens ~20&nbsp;Sekunden. Ohne Token ist die Seite nur zum Lesen / lokal.
+      <br><br>
+      1. <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Fine-grained Token erstellen</a><br>
+      2. <b>Repository access</b> → „Only select repositories" → <code>chiro-prospect-tracker</code><br>
+      3. <b>Permissions</b> → <b>Repository permissions</b> → <b>Contents</b> → <b>Read and write</b><br>
+      4. Token generieren, unten einfügen, „Speichern &amp; verbinden".
+      <br><br>
+      Der Token wird nur in diesem Browser gespeichert (localStorage) und ist auf dieses eine Repo begrenzt. Jederzeit auf GitHub widerrufbar.
+    </p>
+    <input id="ghTok" type="password" placeholder="github_pat_… oder ghp_…" spellcheck="false" autocomplete="off"
+      style="width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:inherit;font-family:ui-monospace,Menlo,monospace;font-size:12px">
+    <div class="drow-actions" style="margin-top:10px">
+      <button id="ghSave" class="primary">Speichern &amp; verbinden</button>
+      <button id="ghRemove">Token entfernen</button>
+      <button id="ghClose">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
 const STATUSES = ["Neu","Angeschrieben","Follow-up 1","Follow-up 2","Antwort erhalten","Call vereinbart","Kunde","Kein Fit","Abgesagt"];
 const OWNERS = ["","Marius","Moritz"];
@@ -175,11 +205,19 @@ const DETAIL_FIELDS = [
   ["moneySignal","Money-Signal","textarea"],["notes","Notizen","textarea"],["source","Quelle","text"]
 ];
 const LS_KEY = "chiroTracker.working";
+const TOK_KEY = "chiroTracker.ghtoken";
 const todayStr = new Date().toISOString().slice(0,10);
+const GH = { o:"marius1494", r:"chiro-prospect-tracker", b:"main", path:"data.json" };
 
 let model = null, dirty = false;
-let sortK = "name", sortDir = 1;
+let sortK = null, sortDir = 1;
 const expanded = new Set();
+let ghToken = "";
+try{ ghToken = localStorage.getItem(TOK_KEY) || ""; }catch(e){}
+let remoteSha = null, saveTimer = null, saving = false, saveAgain = false;
+const touched = new Set(), deleted = new Set();
+const hhmm = () => new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+function setSync(txt, cls){ const el = document.getElementById("sync"); if(el){ el.textContent = txt; el.className = "sync "+(cls||""); } }
 
 /* theme */
 const themeBtn = document.getElementById("themeBtn");
@@ -193,17 +231,32 @@ themeBtn.onclick = () => {
 
 /* load */
 async function load(){
-  const saved = localStorage.getItem(LS_KEY);
+  if(ghToken){
+    try{
+      const got = await ghGetRaw();
+      model = got.obj; remoteSha = got.sha; normalize(); dirty = false;
+      try{ localStorage.removeItem(LS_KEY); }catch(e){}
+      init();
+      setSync("✓ verbunden – speichert automatisch", "ok");
+      setInterval(poll, 20000);
+      document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) poll(); });
+      return;
+    }catch(e){
+      setSync("⚠ Token-Fehler ("+e.message+") – nur lesen", "err");
+    }
+  }
+  const saved = (()=>{ try{ return localStorage.getItem(LS_KEY); }catch(e){ return null; } })();
   if(saved){
     try{ model = JSON.parse(saved); dirty = true; normalize();
       setNotice("Ungespeicherte Änderungen aus diesem Browser geladen. Der Zurücksetzen-Button lädt wieder data.json.", "dirty");
-      init(); return;
+      init(); if(!ghToken) setSync("nur lokal – ⇅ Sync einrichten", ""); return;
     }catch(e){}
   }
   try{
-    const r = await fetch("./data.json", {cache:"no-store"});
+    const r = await fetch("./data.json?_="+Date.now(), {cache:"no-store"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     model = await r.json(); normalize(); init();
+    if(!ghToken) setSync("nur lesen – ⇅ Sync einrichten", "");
   }catch(e){
     document.getElementById("loadNotice").innerHTML =
       '<div class="notice err"><b>data.json konnte nicht geladen werden</b> ('+e.message+'). '+
@@ -211,6 +264,97 @@ async function load(){
       '<code>python3 -m http.server</code> starten und <a href="http://localhost:8000/">localhost:8000</a> öffnen — '+
       'oder die GitHub-Pages-URL nutzen.</div>';
   }
+}
+/* --- GitHub sync --- */
+function ghHeaders(){ return { "Authorization":"Bearer "+ghToken, "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28" }; }
+function b64enc(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ""; const CH = 0x8000;
+  for(let i=0;i<bytes.length;i+=CH) bin += String.fromCharCode.apply(null, bytes.subarray(i,i+CH));
+  return btoa(bin);
+}
+function b64dec(b64){
+  const bin = atob((b64||"").replace(/\s/g,""));
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+async function ghGetRaw(){
+  const url = "https://api.github.com/repos/"+GH.o+"/"+GH.r+"/contents/"+GH.path+"?ref="+GH.b+"&_="+Date.now();
+  const res = await fetch(url, { headers: ghHeaders(), cache:"no-store" });
+  if(!res.ok) throw new Error("GET "+res.status);
+  const j = await res.json();
+  return { obj: JSON.parse(b64dec(j.content)), sha: j.sha };
+}
+async function ghPut(str, msg){
+  const body = { message: msg, content: b64enc(str), branch: GH.b };
+  if(remoteSha) body.sha = remoteSha;
+  return fetch("https://api.github.com/repos/"+GH.o+"/"+GH.r+"/contents/"+GH.path,
+    { method:"PUT", headers: ghHeaders(), body: JSON.stringify(body) });
+}
+function scheduleSave(){
+  if(!ghToken) return;
+  setSync("● nicht gespeichert", "pending");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 1500);
+}
+async function doSave(){
+  if(!ghToken || !model) return;
+  if(saving){ saveAgain = true; return; }
+  saving = true; saveAgain = false;
+  setSync("speichert …", "pending");
+  try{
+    let res = await ghPut(currentJson(), "tracker: Update "+hhmm());
+    if(res.status === 409){
+      const got = await ghGetRaw();
+      remoteSha = got.sha;
+      model.prospects = mergeRemote(got.obj.prospects || []);
+      renderTable();
+      res = await ghPut(currentJson(), "tracker: Update (zusammengeführt)");
+    }
+    if(res.ok){
+      const j = await res.json();
+      remoteSha = j.content && j.content.sha;
+      touched.clear(); deleted.clear(); dirty = false;
+      try{ localStorage.removeItem(LS_KEY); }catch(e){}
+      setNotice("", "dirty");
+      setSync("✓ gespeichert "+hhmm(), "ok");
+    } else if(res.status === 401 || res.status === 403){
+      setSync("⚠ Token ungültig oder ohne Schreibrecht", "err");
+    } else {
+      setSync("⚠ Speichern fehlgeschlagen ("+res.status+")", "err");
+    }
+  }catch(e){
+    setSync("⚠ offline – nicht gespeichert", "err");
+  }
+  saving = false;
+  if(saveAgain) doSave();
+}
+function mergeRemote(remoteList){
+  const localById = new Map(model.prospects.map(p=>[p.id,p]));
+  const out = [];
+  remoteList.forEach(rp=>{
+    if(deleted.has(rp.id)) return;
+    out.push(touched.has(rp.id) && localById.has(rp.id) ? {...localById.get(rp.id)} : rp);
+  });
+  const remoteIds = new Set(remoteList.map(p=>p.id));
+  model.prospects.forEach(p=>{ if(!remoteIds.has(p.id) && touched.has(p.id) && !deleted.has(p.id)) out.unshift({...p}); });
+  out.forEach(p=>{ p.followUp1 = !!p.followUp1; p.followUp2 = !!p.followUp2; });
+  return out;
+}
+async function poll(){
+  if(!ghToken || !model || document.hidden || saving) return;
+  try{
+    const got = await ghGetRaw();
+    if(got.sha && got.sha !== remoteSha){
+      if(!dirty && !touched.size && !deleted.size){
+        remoteSha = got.sha; model = got.obj; normalize(); renderTable();
+        setSync("↻ vom Kollegen aktualisiert "+hhmm(), "ok");
+      } else {
+        setSync("⚠ Kollege hat geändert – wird beim Speichern zusammengeführt", "pending");
+      }
+    }
+  }catch(e){}
 }
 function normalize(){
   model.prospects.forEach(p=>{
@@ -225,10 +369,12 @@ function setNotice(msg, kind){
   document.getElementById(kind==="dirty" ? "dirtyNotice" : "loadNotice").innerHTML =
     msg ? '<div class="notice">'+msg+'</div>' : "";
 }
-function markDirty(){
+function markDirty(p){
   dirty = true;
+  if(p && p.id) touched.add(p.id);
   try{ localStorage.setItem(LS_KEY, JSON.stringify(model)); }catch(e){}
-  setNotice('Ungespeicherte Änderungen (nur in diesem Browser). Zum Sichern: <b>Exportieren</b> → data.json ersetzen &amp; committen.', "dirty");
+  if(ghToken) scheduleSave();
+  else setNotice('Nur in diesem Browser gespeichert. Für Auto-Sync zu GitHub: Button <b>⇅ Sync</b> oben.', "dirty");
   renderStats();
 }
 
@@ -250,6 +396,15 @@ function init(){
     localStorage.removeItem(LS_KEY); location.reload();
   };
   document.getElementById("exportBtn").onclick = openExport;
+  const ghDlg = document.getElementById("ghDlg");
+  document.getElementById("ghBtn").onclick = ()=>{ document.getElementById("ghTok").value = ghToken; if(ghDlg.showModal) ghDlg.showModal(); };
+  document.getElementById("ghClose").onclick = ()=> ghDlg.close();
+  document.getElementById("ghSave").onclick = ()=>{
+    const v = document.getElementById("ghTok").value.trim();
+    try{ v ? localStorage.setItem(TOK_KEY, v) : localStorage.removeItem(TOK_KEY); }catch(e){}
+    location.reload();
+  };
+  document.getElementById("ghRemove").onclick = ()=>{ try{ localStorage.removeItem(TOK_KEY); }catch(e){} location.reload(); };
   updateArrows(); renderTable();
 }
 function updateArrows(){
@@ -272,6 +427,7 @@ function rows(){
     }
     return true;
   });
+  if(!sortK) return r;
   return r.sort((a,b)=>{
     let x=a[sortK], y=b[sortK];
     if(sortK==="followUp1"||sortK==="followUp2"){ return ((x?1:0)-(y?1:0))*sortDir; }
@@ -284,7 +440,7 @@ function rows(){
 function textCell(p, key, cls){
   const td = document.createElement("td"); td.className = "c-"+(cls||key);
   const inp = document.createElement("input"); inp.type="text"; inp.className="cin"; inp.value = p[key]||"";
-  inp.addEventListener("change", ()=>{ p[key] = inp.value; markDirty(); });
+  inp.addEventListener("change", ()=>{ p[key] = inp.value; markDirty(p); });
   td.appendChild(inp);
   if(key==="website" || key==="email"){
     const a = document.createElement("a"); a.className="lnk"; a.textContent = key==="email" ? "✉" : "↗";
@@ -307,10 +463,10 @@ function selectCell(p, key, opts, cls, cb){
     sel.addEventListener("change", ()=>{
       p.status = sel.value;
       dot.className = "badge-dot st-"+(p.status||"Neu").replace(/[^A-Za-z0-9]/g,"");
-      markDirty(); if(cb) cb();
+      markDirty(p); if(cb) cb();
     });
   } else {
-    sel.addEventListener("change", ()=>{ p[key] = sel.value; markDirty(); if(cb) cb(); });
+    sel.addEventListener("change", ()=>{ p[key] = sel.value; markDirty(p); if(cb) cb(); });
   }
   td.appendChild(sel);
   return td;
@@ -318,7 +474,7 @@ function selectCell(p, key, opts, cls, cb){
 function dateCell(p, key){
   const td = document.createElement("td"); td.className="c-date";
   const inp = document.createElement("input"); inp.type="date"; inp.className="cin"; inp.value = p[key]||"";
-  inp.addEventListener("change", ()=>{ p[key] = inp.value; markDirty(); });
+  inp.addEventListener("change", ()=>{ p[key] = inp.value; markDirty(p); });
   td.appendChild(inp);
   return td;
 }
@@ -331,7 +487,7 @@ function fuCell(p, num){
   cb.addEventListener("change", ()=>{
     p[boolKey] = cb.checked;
     if(cb.checked && !p[dateKey]){ p[dateKey] = todayStr; dt.textContent = todayStr; }
-    markDirty();
+    markDirty(p);
   });
   wrap.append(cb, dt);
   td.appendChild(wrap);
@@ -346,7 +502,7 @@ function renderTable(){
   const tb = document.getElementById("tbody");
   tb.innerHTML = "";
   rows().forEach(p=>{
-    const tr = document.createElement("tr"); tr.className="prow";
+    const tr = document.createElement("tr"); tr.className="prow"; tr.dataset.id = p.id;
     const exp = document.createElement("td"); exp.className="expcol";
     const eb = document.createElement("button"); eb.className="expbtn"; eb.textContent = expanded.has(p.id) ? "▾" : "▸";
     eb.title = "Zusatzfelder";
@@ -389,7 +545,7 @@ function detailRow(p){
     const ctrl = document.createElement(type==="textarea" ? "textarea" : "input");
     if(type!=="textarea") ctrl.type = "text";
     ctrl.value = p[k]||"";
-    ctrl.addEventListener("change", ()=>{ p[k] = ctrl.value; markDirty(); });
+    ctrl.addEventListener("change", ()=>{ p[k] = ctrl.value; markDirty(p); });
     f.append(lab, ctrl); g.appendChild(f);
   });
   td.appendChild(g);
@@ -400,7 +556,7 @@ function detailRow(p){
   links.innerHTML = [mk(p.youtube,"YouTube"), mk(p.website,"Website"), mk(p.instagram,"Instagram")].filter(Boolean).join(" &nbsp;·&nbsp; ");
   const del = document.createElement("button");
   del.textContent = "Prospect löschen";
-  del.onclick = ()=>{ if(confirm("Löschen: "+p.name+" ?")){ model.prospects = model.prospects.filter(x=>x!==p); expanded.delete(p.id); markDirty(); renderTable(); } };
+  del.onclick = ()=>{ if(confirm("Löschen: "+p.name+" ?")){ deleted.add(p.id); model.prospects = model.prospects.filter(x=>x!==p); expanded.delete(p.id); markDirty(p); renderTable(); } };
   const close = document.createElement("button"); close.textContent = "Einklappen";
   close.onclick = ()=>{ expanded.delete(p.id); renderTable(); };
   act.append(close, del, links);
@@ -411,24 +567,25 @@ function detailRow(p){
 
 function addProspect(){
   const id = "neu-"+Date.now().toString(36);
-  model.prospects.unshift({
+  const np = {
     id, name:"Neuer Prospect", city:"", owner:"", status:"Neu", score:"", email:"", website:"", youtube:"", instagram:"",
     hookVideoTitle:"", subs:"", lastUpload:"", bestVideoViews:"", moneySignal:"", notes:"",
     contactedDate:"", followUp1:false, followUp1Date:"", followUp2:false, followUp2Date:"",
     source:"manuell "+todayStr
-  });
+  };
+  model.prospects.unshift(np);
   expanded.add(id);
   ["q","fOwner","fStatus"].forEach(fid=>{ const el=document.getElementById(fid); if(el) el.value=""; });
-  sortK = "name"; sortDir = 1; updateArrows();
+  sortK = null; updateArrows();
   renderTable();
-  markDirty();
-  window.scrollTo({top:0,behavior:"smooth"});
-  const firstRow = document.querySelector("#tbody tr.prow");
-  if(firstRow){
-    firstRow.style.transition = "background .15s"; firstRow.style.background = "var(--accent-weak)";
-    setTimeout(()=>{ firstRow.style.background = ""; }, 900);
-    const nameInp = firstRow.querySelector(".c-name .cin");
-    if(nameInp){ nameInp.focus(); nameInp.select(); }
+  markDirty(np);
+  const row = document.querySelector('#tbody tr.prow[data-id="'+id+'"]');
+  if(row){
+    row.scrollIntoView({block:"center", behavior:"smooth"});
+    row.style.transition = "background .2s"; row.style.background = "var(--accent-weak)";
+    setTimeout(()=>{ row.style.background = ""; }, 1300);
+    const ni = row.querySelector(".c-name .cin");
+    if(ni){ ni.focus(); ni.select(); }
   }
 }
 
