@@ -5,26 +5,25 @@ Kein Build, keine Abhängigkeiten. Eine HTML-Datei + eine JSON-Datei.
 
 ## Dateien
 
-- `index.html` — die Oberfläche (Tabelle, Filter, Bearbeiten, Export). Self-contained.
+- `index.html` — die Oberfläche (Tabelle, Filter, inline bearbeiten, GitHub-Auto-Sync). Self-contained.
 - `data.json` — **die einzige Datenquelle.** Ein Objekt = ein Prospect. Von Hand editierbar.
 
 ## Ansehen
 
-- **GitHub Pages:** nach Aktivierung unter `https://<user>.github.io/<repo>/`
+- **GitHub Pages:** `https://marius1494.github.io/chiro-prospect-tracker/`
 - **Lokal:** im Ordner `python3 -m http.server` starten, dann `http://localhost:8000/` öffnen.
   (Doppelklick auf `index.html` funktioniert nicht — der Browser blockiert dann das Laden von `data.json`.)
 
 ## Bearbeiten — zwei Wege
 
-**A) In der Oberfläche.** Zeile anklicken → Felder bearbeiten. Änderungen liegen zunächst nur im
-Browser (localStorage). Zum dauerhaften Speichern: Button **Exportieren → „data.json herunterladen"**,
-die Datei im Repo ersetzen, committen, pushen.
+**A) In der Oberfläche.** Alle Felder direkt in der Tabellenzeile bearbeiten (kein Aufklappen mehr).
+Link-Spalten (YouTube, Web/IG) über das ✎ setzen. Mit hinterlegtem GitHub-Token (Button **⇅ Sync**)
+wird jede Änderung nach ~1,5&nbsp;s automatisch nach GitHub gespeichert; ohne Token nur lokal / nur lesen.
 
 **B) Direkt in `data.json`.** Datei im Editor öffnen, Objekt ändern/hinzufügen, committen, pushen.
 
 `status`-Werte: `Neu` · `Angeschrieben` · `Follow-up 1` · `Follow-up 2` · `Antwort erhalten` ·
 `Call vereinbart` · `Kunde` · `Kein Fit` · `Abgesagt`
-`score`: 1–3 (3 = bester Fit). `nextActionDate` im Format `YYYY-MM-DD` (wird rot, wenn fällig/überfällig).
 
 ## Zusammenarbeit (2 Personen + jeweils Claude)
 
@@ -33,9 +32,11 @@ Bei Parallelbearbeitung kann es einen Merge-Konflikt in `data.json` geben — de
 zeilenweise auflösen (ein Prospect pro Block). Claude (beide Rechner) kann `data.json` direkt
 bearbeiten und committen.
 
-## Spalten
+## Spalten (Oberfläche)
 
-Pipeline-Basis (wie im alten Google Sheet): Name, YouTube, Website, Instagram, E-Mail,
-Angeschrieben, Follow-up, Zusage/Status, Bearbeiter.
-Ergänzt: Stadt/State, Score, Abos, Letzter Upload, Bestes Video (Views), Money-Signal,
-Video-Titel für den Personalisierungs-Hook, Follow-up-1/2-Datum, Nächste Aktion (+ Datum), Notizen, Quelle.
+Name · Stadt · YouTube · Web / IG · Bearbeiter · Status · E-Mail · Angeschrieben (Datum) ·
+FU 1 / FU 2 (Häkchen + Datum) · Löschen (✕).
+
+`data.json` kann darüber hinaus weitere Felder pro Prospect enthalten (z. B. `score`, `moneySignal`,
+`notes`, `subs`, `lastUpload`, `bestVideoViews`, `source`, `hookVideoTitle`) — die werden aktuell
+nicht in der Tabelle angezeigt, bleiben beim Speichern aber erhalten.

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chiro Prospect Tracker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%236aa8ff'/%3E%3Cstop%20offset='1'%20stop-color='%232f6feb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath%20d='M9%204h14l6%208-13%2016L3%2012z'%20fill='url(%23g)'%20stroke='%231a49b0'%20stroke-width='1.2'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9%204l4%208h6l4-8M3%2012h26M16%2028l-3-16M16%2028l3-16'%20fill='none'%20stroke='%23ffffff'%20stroke-opacity='.5'%20stroke-width='1'/%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eef1f4; --border:#d9dee5;
@@ -47,47 +48,46 @@
   .notice{background:var(--warn-bg);color:var(--warn);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:13px}
   .notice.err{background:var(--bad-bg);color:var(--bad)}
   .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--panel)}
-  table{border-collapse:collapse;width:100%;min-width:960px}
+  table{border-collapse:collapse;width:100%;min-width:940px}
   th,td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
   th{background:var(--panel-2);cursor:pointer;white-space:nowrap;font-weight:600;user-select:none;position:sticky;top:0}
   th[data-k]:hover{color:var(--accent)}
   th .arr{font-size:10px;color:var(--muted)}
-  td.expcol,th.expcol{width:26px;text-align:center;padding:4px 2px}
-  .expbtn{border:none;background:transparent;padding:2px 4px;cursor:pointer;color:var(--muted);font-size:12px}
   tr.prow.rs-Angeschrieben td,tr.prow.rs-Followup1 td,tr.prow.rs-Followup2 td{background:color-mix(in srgb,var(--warn) 11%,var(--panel))}
   tr.prow.rs-Antworterhalten td,tr.prow.rs-Callvereinbart td{background:color-mix(in srgb,var(--accent) 13%,var(--panel))}
   tr.prow.rs-Kunde td{background:color-mix(in srgb,var(--good) 15%,var(--panel))}
   tr.prow.rs-KeinFit td,tr.prow.rs-Abgesagt td{background:color-mix(in srgb,var(--bad) 11%,var(--panel))}
   tr.prow:hover td{background:var(--panel-2)}
   /* inline-editierbare Zellen */
-  .cin,.csel{width:100%;min-width:70px;background:transparent;border:1px solid transparent;border-radius:5px;
+  .cin,.csel{width:100%;min-width:60px;background:transparent;border:1px solid transparent;border-radius:5px;
     padding:5px 6px;color:inherit;font:inherit}
   .cin:hover,.csel:hover{border-color:var(--border)}
   .cin:focus,.csel:focus{border-color:var(--accent);background:var(--panel);outline:none}
   .csel{cursor:pointer}
   td.c-status .csel{font-weight:600}
-  td.c-name{min-width:240px} td.c-name .cin{font-weight:600}
-  td.c-owner{min-width:100px} td.c-status{min-width:150px}
-  td.c-website{min-width:180px} td.c-email{min-width:190px} td.c-date{min-width:150px}
-  td.c-fu{min-width:74px;text-align:center}
-  .lnk{margin-left:2px;font-size:12px;text-decoration:none;opacity:.8}
+  td.c-name{min-width:150px} td.c-name .cin{font-weight:600}
+  td.c-city{min-width:96px}
+  td.c-owner{min-width:96px} td.c-status{min-width:150px}
+  td.c-email{min-width:180px} td.c-date{min-width:150px}
+  td.c-fu{min-width:64px;text-align:center}
+  .lnk{font-size:12px;text-decoration:none;opacity:.85}
   .lnk:hover{opacity:1}
+  td.linkcell{min-width:62px;white-space:nowrap;text-align:center}
+  .linkcell a{margin:0 2px;font-size:11px;font-weight:700;letter-spacing:.02em;text-decoration:none}
+  .linkcell a.off{color:var(--muted);opacity:.35;pointer-events:none}
+  .linkcell .edit{border:none;background:transparent;cursor:pointer;color:var(--muted);font-size:11px;padding:2px 3px;margin-left:1px}
+  .linkcell .edit:hover{color:var(--accent)}
   input[type=date].cin{min-width:120px}
   .fu-wrap{display:flex;flex-direction:column;align-items:center;gap:1px}
   input[type=checkbox].fu{width:19px;height:19px;accent-color:var(--good);cursor:pointer;margin:0}
   .fu-date{font-size:10px;color:var(--muted)}
-  .score-1{color:var(--muted)} .score-2{color:var(--warn)} .score-3{color:var(--good);font-weight:700}
+  .rowdel{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px}
+  .rowdel:hover{color:var(--bad)}
+  td.c-del{width:30px;text-align:center;padding:4px 2px}
   .badge-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
   .st-Neu{background:var(--muted)} .st-Angeschrieben,.st-Followup1,.st-Followup2{background:var(--warn)}
   .st-Antworterhalten,.st-Callvereinbart{background:var(--accent)} .st-Kunde{background:var(--good)}
   .st-KeinFit,.st-Abgesagt{background:var(--bad)}
-  tr.drow td{background:var(--panel-2);padding:12px 14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-  .fld{display:flex;flex-direction:column;gap:3px}
-  .fld label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
-  .fld input,.fld textarea{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:6px 8px;width:100%;color:inherit;font:inherit}
-  .fld textarea{min-height:50px;resize:vertical}
-  .drow-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .muted{color:var(--muted)}
   .brand{display:flex;align-items:center;justify-content:center;gap:9px;margin:34px 0 22px;
     color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
@@ -118,7 +118,7 @@
   <div id="loadNotice"></div>
 
   <div class="toolbar">
-    <input type="search" id="q" placeholder="Suche: Name, Stadt, E-Mail, Notiz…">
+    <input type="search" id="q" placeholder="Suche: Name, Stadt, E-Mail…">
     <select id="fOwner"><option value="">Alle Bearbeiter</option></select>
     <select id="fStatus"><option value="">Alle Status</option></select>
     <button id="addBtn" class="primary">+ Prospect hinzufügen</button>
@@ -129,15 +129,17 @@
   <div class="tablewrap">
   <table id="tbl">
     <thead><tr>
-      <th class="expcol"></th>
       <th data-k="name">Name <span class="arr"></span></th>
+      <th data-k="city">Stadt <span class="arr"></span></th>
+      <th>YouTube</th>
+      <th>Web / IG</th>
       <th data-k="owner">Bearb. <span class="arr"></span></th>
       <th data-k="status">Status <span class="arr"></span></th>
-      <th data-k="website">Website <span class="arr"></span></th>
       <th data-k="email">E-Mail <span class="arr"></span></th>
-      <th data-k="contactedDate">Angeschrieben <span class="arr"></span></th>
+      <th data-k="contactedDate">Angeschr. <span class="arr"></span></th>
       <th data-k="followUp1">FU 1 <span class="arr"></span></th>
       <th data-k="followUp2">FU 2 <span class="arr"></span></th>
+      <th class="c-del"></th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
@@ -170,7 +172,7 @@
     </p>
     <input id="ghTok" type="password" placeholder="github_pat_… oder ghp_…" spellcheck="false" autocomplete="off"
       style="width:100%;background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:inherit;font-family:ui-monospace,Menlo,monospace;font-size:12px">
-    <div class="drow-actions" style="margin-top:10px">
+    <div class="dlg-actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
       <button id="ghSave" class="primary">Speichern &amp; verbinden</button>
       <button id="ghRemove">Token entfernen</button>
       <button id="ghClose">Schließen</button>
@@ -181,12 +183,6 @@
 <script>
 const STATUSES = ["Neu","Angeschrieben","Follow-up 1","Follow-up 2","Antwort erhalten","Call vereinbart","Kunde","Kein Fit","Abgesagt"];
 const OWNERS = ["","Marius","Moritz"];
-const DETAIL_FIELDS = [
-  ["city","Stadt / State","text"],["score","Score (1-3)","text"],
-  ["youtube","YouTube","text"],["instagram","Instagram","text"],["hookVideoTitle","Video-Titel für Hook","text"],
-  ["subs","Abos","text"],["lastUpload","Letzter Upload","text"],["bestVideoViews","Bestes Video (Views)","text"],
-  ["moneySignal","Money-Signal","textarea"],["notes","Notizen","textarea"],["source","Quelle","text"]
-];
 const LS_KEY = "chiroTracker.working";
 const TOK_KEY = "chiroTracker.ghtoken";
 const todayStr = new Date().toISOString().slice(0,10);
@@ -194,7 +190,6 @@ const GH = { o:"marius1494", r:"chiro-prospect-tracker", b:"main", path:"data.js
 
 let model = null, dirty = false;
 let sortK = null, sortDir = 1;
-const expanded = new Set();
 let ghToken = "";
 try{ ghToken = localStorage.getItem(TOK_KEY) || ""; }catch(e){}
 let remoteSha = null, saveTimer = null, saving = false, saveAgain = false;
@@ -343,7 +338,7 @@ function normalize(){
   model.prospects.forEach(p=>{
     p.followUp1 = !!p.followUp1; p.followUp2 = !!p.followUp2;
     ["followUp1Date","followUp2Date","contactedDate","website","email","city","owner","status","name",
-     "youtube","instagram","hookVideoTitle","subs","lastUpload","bestVideoViews","moneySignal","notes","source"]
+     "youtube","instagram"]
       .forEach(k=> p[k] = p[k]==null ? "" : p[k]);
     if(p.id==null) p.id = "p-"+Math.random().toString(36).slice(2,9);
   });
@@ -400,7 +395,7 @@ function rows(){
     if(o && p.owner!==o) return false;
     if(s && p.status!==s) return false;
     if(q){
-      const hay = [p.name,p.city,p.email,p.website,p.notes,p.moneySignal,p.hookVideoTitle].join(" ").toLowerCase();
+      const hay = [p.name,p.city,p.email,p.website,p.youtube].join(" ").toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
@@ -414,16 +409,16 @@ function rows(){
   });
 }
 
-/* helpers to build editable cells */
+/* editierbare Zellen */
 function textCell(p, key, cls){
   const td = document.createElement("td"); td.className = "c-"+(cls||key);
   const inp = document.createElement("input"); inp.type="text"; inp.className="cin"; inp.value = p[key]||"";
   inp.addEventListener("change", ()=>{ p[key] = inp.value; markDirty(p); });
   td.appendChild(inp);
-  if(key==="website" || key==="email"){
-    const a = document.createElement("a"); a.className="lnk"; a.textContent = key==="email" ? "✉" : "↗";
-    a.target="_blank"; a.rel="noopener";
-    const setHref = ()=>{ a.href = key==="email" ? ("mailto:"+inp.value) : inp.value; a.style.display = inp.value ? "" : "none"; };
+  if(key==="email"){
+    const a = document.createElement("a"); a.className="lnk"; a.textContent = "✉";
+    a.target="_blank"; a.rel="noopener"; a.style.marginLeft="4px"; a.style.textDecoration="none";
+    const setHref = ()=>{ a.href = "mailto:"+inp.value; a.style.display = inp.value ? "" : "none"; };
     setHref(); inp.addEventListener("input", setHref);
     td.appendChild(a);
   }
@@ -471,6 +466,37 @@ function fuCell(p, num){
   td.appendChild(wrap);
   return td;
 }
+function linkAnchor(url, label){
+  const a = document.createElement("a"); a.textContent = label;
+  if(url){ a.href = url; a.target="_blank"; a.rel="noopener"; a.title = url; }
+  else { a.className = "off"; a.title = "kein Link hinterlegt"; }
+  return a;
+}
+function editUrls(p, keys, labels){
+  let changed = false;
+  keys.forEach((k,i)=>{
+    const v = prompt(labels[i]+":", p[k]||"");
+    if(v!==null && v.trim()!==(p[k]||"")){ p[k] = v.trim(); changed = true; }
+  });
+  if(changed){ markDirty(p); renderTable(); }
+}
+function ytCell(p){
+  const td = document.createElement("td"); td.className="c-yt linkcell";
+  td.appendChild(linkAnchor(p.youtube, "YT"));
+  const ed = document.createElement("button"); ed.className="edit"; ed.textContent="✎"; ed.title="YouTube-Link bearbeiten";
+  ed.onclick = ()=> editUrls(p, ["youtube"], ["YouTube-URL"]);
+  td.appendChild(ed);
+  return td;
+}
+function webIgCell(p){
+  const td = document.createElement("td"); td.className="c-links linkcell";
+  td.appendChild(linkAnchor(p.website, "Web"));
+  td.appendChild(linkAnchor(p.instagram, "IG"));
+  const ed = document.createElement("button"); ed.className="edit"; ed.textContent="✎"; ed.title="Website / Instagram bearbeiten";
+  ed.onclick = ()=> editUrls(p, ["website","instagram"], ["Website-URL","Instagram-URL"]);
+  td.appendChild(ed);
+  return td;
+}
 
 /* render */
 function applyRowStatus(tr, status){
@@ -481,24 +507,30 @@ function renderTable(){
   tb.innerHTML = "";
   rows().forEach(p=>{
     const tr = document.createElement("tr"); tr.className="prow"; tr.dataset.id = p.id;
-    const exp = document.createElement("td"); exp.className="expcol";
-    const eb = document.createElement("button"); eb.className="expbtn"; eb.textContent = expanded.has(p.id) ? "▾" : "▸";
-    eb.title = "Zusatzfelder";
-    eb.onclick = ()=>{ expanded.has(p.id) ? expanded.delete(p.id) : expanded.add(p.id); renderTable(); };
-    exp.appendChild(eb); tr.appendChild(exp);
-
     tr.appendChild(textCell(p,"name"));
+    tr.appendChild(textCell(p,"city"));
+    tr.appendChild(ytCell(p));
+    tr.appendChild(webIgCell(p));
     tr.appendChild(selectCell(p,"owner",OWNERS));
     tr.appendChild(selectCell(p,"status",STATUSES,"status",()=>applyRowStatus(tr,p.status)));
-    tr.appendChild(textCell(p,"website"));
     tr.appendChild(textCell(p,"email"));
     tr.appendChild(dateCell(p,"contactedDate"));
     tr.appendChild(fuCell(p,1));
     tr.appendChild(fuCell(p,2));
+
+    const dtd = document.createElement("td"); dtd.className="c-del";
+    const del = document.createElement("button"); del.className="rowdel"; del.textContent="✕"; del.title="Prospect löschen";
+    del.onclick = ()=>{
+      if(confirm("Löschen: "+(p.name||"(ohne Name)")+" ?")){
+        deleted.add(p.id);
+        model.prospects = model.prospects.filter(x=>x!==p);
+        markDirty(p); renderTable();
+      }
+    };
+    dtd.appendChild(del); tr.appendChild(dtd);
+
     applyRowStatus(tr, p.status);
     tb.appendChild(tr);
-
-    if(expanded.has(p.id)) tb.appendChild(detailRow(p));
   });
   renderStats();
 }
@@ -513,46 +545,15 @@ function renderStats(){
   parts.push('<span class="chip">FU2 ✓ <b>'+ps.filter(p=>p.followUp2).length+'</b></span>');
   document.getElementById("stats").innerHTML = parts.join("");
 }
-function detailRow(p){
-  const tr = document.createElement("tr"); tr.className="drow";
-  const td = document.createElement("td"); td.colSpan = 9;
-  const g = document.createElement("div"); g.className="grid";
-  DETAIL_FIELDS.forEach(([k,label,type])=>{
-    const f = document.createElement("div"); f.className="fld";
-    const lab = document.createElement("label"); lab.textContent = label;
-    const ctrl = document.createElement(type==="textarea" ? "textarea" : "input");
-    if(type!=="textarea") ctrl.type = "text";
-    ctrl.value = p[k]||"";
-    ctrl.addEventListener("change", ()=>{ p[k] = ctrl.value; markDirty(p); });
-    f.append(lab, ctrl); g.appendChild(f);
-  });
-  td.appendChild(g);
-
-  const act = document.createElement("div"); act.className="drow-actions";
-  const links = document.createElement("span"); links.className="muted";
-  const mk = (h,t)=> h ? '<a href="'+h.replace(/"/g,"&quot;")+'" target="_blank" rel="noopener">'+t+' ↗</a>' : "";
-  links.innerHTML = [mk(p.youtube,"YouTube"), mk(p.website,"Website"), mk(p.instagram,"Instagram")].filter(Boolean).join(" &nbsp;·&nbsp; ");
-  const del = document.createElement("button");
-  del.textContent = "Prospect löschen";
-  del.onclick = ()=>{ if(confirm("Löschen: "+p.name+" ?")){ deleted.add(p.id); model.prospects = model.prospects.filter(x=>x!==p); expanded.delete(p.id); markDirty(p); renderTable(); } };
-  const close = document.createElement("button"); close.textContent = "Einklappen";
-  close.onclick = ()=>{ expanded.delete(p.id); renderTable(); };
-  act.append(close, del, links);
-  td.appendChild(act);
-  tr.appendChild(td);
-  return tr;
-}
 
 function addProspect(){
   const id = "neu-"+Date.now().toString(36);
   const np = {
-    id, name:"Neuer Prospect", city:"", owner:"", status:"Neu", score:"", email:"", website:"", youtube:"", instagram:"",
-    hookVideoTitle:"", subs:"", lastUpload:"", bestVideoViews:"", moneySignal:"", notes:"",
+    id, name:"Neuer Prospect", city:"", owner:"", status:"Neu", email:"", website:"", youtube:"", instagram:"",
     contactedDate:"", followUp1:false, followUp1Date:"", followUp2:false, followUp2Date:"",
     source:"manuell "+todayStr
   };
   model.prospects.unshift(np);
-  expanded.add(id);
   ["q","fOwner","fStatus"].forEach(fid=>{ const el=document.getElementById(fid); if(el) el.value=""; });
   sortK = null; updateArrows();
   renderTable();
