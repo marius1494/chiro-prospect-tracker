@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-08",
+  "updated": "2026-09-11",
   "note": "Diese Datei ist die einzige Datenquelle. Von Hand editierbar. Ein Objekt = ein Prospect. Nach Aenderung: speichern, committen, pushen. status: Neu | Angeschrieben | Follow-up 1 | Follow-up 2 | Antwort erhalten | Call vereinbart | Kunde | Kein Fit | Abgesagt. score 1-3. followUp1/followUp2: true/false (Kaestchen in der UI).",
   "prospects": [
     {
@@ -31,7 +31,7 @@
       "name": "Dr. Gabriela Ludeman & Dr. Mitchell Quil (Bolingbrook Family Chiropractic)",
       "city": "Bolingbrook, IL (pruefen)",
       "owner": "Moritz",
-      "status": "Neu",
+      "status": "Angeschrieben",
       "score": 2,
       "email": "gabrielaludeman@gmail.com",
       "website": "",
@@ -600,7 +600,9 @@
       "nextAction": "Videotitel fuer Hook waehlen, dann anschreiben",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~48-472 (Median ~177). Uploads letzten Monat: 5. Keine oeffentliche E-Mail auf der Website (Buchungsformular / Tel. 859-918-6868). DC mit 20 J. Erfahrung laut Bio. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "changeofpacechiro",
@@ -624,7 +626,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~131-997 (Median ~577). Uploads letzten Monat: 1. Kanal-Account seit Jul 2025. Tel. 404-474-8258. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "arizona-chiropractic-center",
@@ -648,7 +652,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~5-105 (Median ~40). Uploads letzten Monat: 13. Keine E-Mail auf der Website, Tel. 623-512-4040. Kanal-Account 2016, laufender Upload-Rhythmus seit ~Nov 2025. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "drjohnbrockway",
@@ -672,7 +678,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~10-1572 (Median ~188). Uploads letzten Monat: 5. Keine E-Mail auf der Website, Tel. 720-889-1659. Laufender Upload-Rhythmus seit ~Jun 2026. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "kostermanchiropractic",
@@ -696,7 +704,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~21-433 (Median ~84). Uploads letzten Monat: 9. Kanal-Inhalte starten ~Jan 2026 (34 Videos gesamt). E-Mail auf Contact-Seite pruefen. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "patricklovett4462",
@@ -720,7 +730,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~8-488 (Median ~194). Uploads letzten Monat: 9. Kanal-Inhalte starten ~Nov 2025 (43 Videos gesamt). Website + E-Mail noch nicht ermittelt. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "heiss-chiropractic",
@@ -744,7 +756,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~7-160 (Median ~34). Uploads letzten Monat: 8. Kanal ganz neu: 8 Videos seit ~19. Aug 2026. E-Mail noch nicht ermittelt. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "angelhandschiropractic",
@@ -768,7 +782,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~8-129 (Median ~17). Uploads letzten Monat: 6. Kanal-Account erstellt Jul 2026, 6 Videos. Ort ueber Website verifizieren, E-Mail ermitteln. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "carechiropractic",
@@ -792,7 +808,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~417-707 (Median ~626). Uploads letzten Monat: 3. Kanal-Account seit 2008, 549 Videos gesamt, durchgehende Upload-Historie. Tel. 303-394-2273. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "breakawaychiropractic",
@@ -816,7 +834,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~39-1112 (Median ~261). Uploads letzten Monat: 5. Kanal-Account seit 2017, 317 Videos gesamt, laufender Upload-Rhythmus seit ~Okt 2024. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "teamhealthcareclinic",
@@ -840,7 +860,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~8-3284 (Median ~625). Uploads letzten Monat: 9. Kanal-Account seit 2010, 442 Videos gesamt. Zuletzt hohe Upload-Frequenz (19 Videos in 60 Tagen). Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "dr-kayhla-williams",
@@ -864,7 +886,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~259-261 (Median ~261). Uploads letzten Monat: 2. Kanal-Account seit Dez 2021, 94 Videos gesamt, durchgehende Upload-Historie. Website + E-Mail noch nicht ermittelt. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "rhchiropractic",
@@ -888,7 +912,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~10-3191 (Median ~3191). Uploads letzten Monat: 2. Kanal-Account seit 2008, 69 Videos gesamt, Upload-Historie ueber mehrere Jahre. Quelle-Lauf: streamers/youtube-scraper via Apify.",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "andrey-okhrimenko",
@@ -912,7 +938,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~65-739 (Median ~188). Uploads letzten Monat: 6. Keine E-Mail auf der Website, Tel. 413-331-5023. Kanal-Account 2014, 82 Videos gesamt, laufender Upload-Rhythmus erst seit ~2026. Quelle-Lauf: streamers/youtube-scraper via Apify (View-Grenze auf ~45 gesenkt).",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "rowechiropractic",
@@ -936,7 +964,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~11-280 (Median ~40). Uploads letzten Monat: 6. subs 98. Kanal-Account 2009, 182 Videos gesamt, laufender Upload-Rhythmus seit ~Sep 2025. E-Mail auf Contact-Seite pruefen. Quelle-Lauf: streamers/youtube-scraper via Apify (View-Grenze auf ~45 gesenkt).",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     },
     {
       "id": "midwestchiro",
@@ -960,7 +990,9 @@
       "nextAction": "Kanal + Kontakt pruefen, Videotitel fuer Hook",
       "nextActionDate": "",
       "notes": "Views der letzten Videos ~13-445 (Median ~31). Uploads letzten Monat: 2. Tel. 952-303-4590. Kanal-Account 2022, 350 Videos gesamt, durchgehende Upload-Historie; zuletzt nur vereinzelt neue Videos. Quelle-Lauf: streamers/youtube-scraper via Apify (View-Grenze auf ~45 gesenkt).",
-      "source": "Apify YouTube 2026-09-08"
+      "source": "Apify YouTube 2026-09-08",
+      "followUp1": false,
+      "followUp2": false
     }
   ]
 }
