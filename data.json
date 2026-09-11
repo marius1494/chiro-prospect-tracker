@@ -4,13 +4,13 @@
   "prospects": [
     {
       "id": "neu-mtwn1d12",
-      "name": "Neuer Prospect",
+      "name": "",
       "city": "",
       "owner": "",
       "status": "Neu",
       "email": "",
       "website": "",
-      "youtube": "",
+      "youtube": "https://www.youtube.com/@augentraining.online/videos",
       "instagram": "",
       "contactedDate": "",
       "followUp1": false,
