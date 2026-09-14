@@ -226,14 +226,14 @@
     },
     {
       "id": "uintah-spinal",
-      "name": "Uintah Spinal Health (Praxisname pruefen)",
-      "city": "Utah (pruefen)",
+      "name": "Dr. Jared Wadsworth (Uintah Spinal Health)",
+      "city": "Orem, UT",
       "owner": "Marius",
       "status": "Neu",
       "score": 1,
       "email": "",
-      "website": "",
-      "instagram": "",
+      "website": "https://www.uintahspinalhealth.com/",
+      "instagram": "https://www.instagram.com/utahgolfchiro/",
       "youtube": "https://www.youtube.com/@uintahspinalhealth/videos",
       "hookVideoTitle": "",
       "subs": "verify",
@@ -245,7 +245,7 @@
       "followUp1Date": "",
       "followUp2": false,
       "followUp2Date": "",
-      "notes": "Website und E-Mail fehlen komplett.",
+      "notes": "Praxisname bestaetigt: Uintah Spinal Health, Inhaber Dr. Jared H. Wadsworth, DC, MS, CCSP (Standort 730 S Sleepy Ridge Dr Suite 210, Orem UT). Website gefunden (uintahspinalhealth.com), keine E-Mail dort. Auf Website, Kanal-Info, Instagram (@utahgolfchiro), Facebook und mehreren Arztverzeichnissen (Healthgrades, ZoomInfo etc.) keine oeffentliche E-Mail-Adresse auffindbar -> Feld bewusst leer gelassen statt geraten. Kontakt alternativ per Telefon (385) 453-0009 oder Booking-Formular (uintahspinalhealth.janeapp.com).",
       "source": "Pipeline"
     },
     {
@@ -269,7 +269,7 @@
       "followUp1Date": "",
       "followUp2": false,
       "followUp2Date": "",
-      "notes": "Top-Prioritaet.",
+      "notes": "Top-Prioritaet. E-Mail-Recherche: keine oeffentliche Adresse im Footer/Impressum/Kontaktformular der Website, im YouTube-Kanal-Info oder auf gaengigen Verzeichnissen (ZoomInfo, Chamber of Commerce etc.) verifizierbar -> Feld bewusst leer gelassen statt geraten (Suchmaschinen-Zusammenfassungen nannten wiederholt 'contactus@carolinaschiropractic.com', das liess sich aber auf keiner echten Seite woertlich bestaetigen). Kontakt alternativ per Telefon (704) 243-1010 oder Kontaktformular auf carolinaschiropractic.com/contact-us/.",
       "source": "Deep-Research 2026-09-08"
     },
     {
